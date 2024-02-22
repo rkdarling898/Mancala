@@ -6,7 +6,7 @@ const mRend = new MancalaRenderer(canvas)
 
 canvas.size = getCanvasSize()
 
-mRend.drawBoard()
+mRend.render()
 
 function getCanvasSize () {
     if (innerWidth >= 800) return {width: 800, height: 600}

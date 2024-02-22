@@ -9,7 +9,7 @@ export class MancalaRenderer {
     }
 
     drawBoard () {
-        const board = sizeBoard(this.canvas.width, this.canvas.height)
+        const board = sizeBoard(this.canvas.width, this.canvas.height) // getBoardSize???
 
         this.ctx.fillStyle = this.#backgroundColor
         this.ctx.strokeStyle = this.#lineColor
@@ -19,6 +19,18 @@ export class MancalaRenderer {
         this.ctx.stroke()
         this.ctx.fill()
         this.ctx.closePath()
+    }
+
+    drawPits () {
+        // SVG possibly???
+    }
+
+    drawStones () {
+        // I'll get to you soon bitch
+    }
+
+    render () {
+        this.drawBoard()
     }
 }
 
