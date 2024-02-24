@@ -2,14 +2,15 @@ export class MancalaRenderer {
     #backgroundColor = "white"
     #lineColor = "black"
     
-    constructor (canvas) {
-        this.canvas = canvas.element
-        this.ctx = canvas.ctx
-        this.objects = new Map()
+    constructor (ctx) {
+        this.ctx = ctx
     }
 
-    drawBoard () {
-        const board = getBoardSize(this.canvas.width, this.canvas.height)
+    drawBoard (bData) {
+        const board = bData.getBoardSpecs()
+        const radius = bData.getPitRadius()
+        const margin = bData.getPitMargin()
+        let pit
 
         this.ctx.fillStyle = this.#backgroundColor
         this.ctx.strokeStyle = this.#lineColor
@@ -21,35 +22,42 @@ export class MancalaRenderer {
         this.ctx.closePath()
 
         // Draw pits and stores
+        bData.updatePitLocations()
+        
+        for (let i = 0; i < 14; i++) {
+            pit = bData.pits[i]
 
-        for (let i = 0; i < 8; i++) {
-            this.ctx.beginPath()
-            this.ctx.arc(board.x + (33.75 * i) + (33.75 * (i + 1)) + (20 * i) + 20, board.y + 33.75 + 20, 33.75, 0, Math.PI * 2)
-            this.ctx.stroke()
-            this.ctx.closePath()
+            if (pit.id % 7 === 0) {
+                this.drawStore(pit.x, pit.y, radius, board.height/2 - margin)
+                continue
+            }
+
+            this.drawPit(pit.x, pit.y, radius)
         }
+
+    }
+
+    drawPit (x, y, radius) {
+        this.ctx.beginPath()
+        this.ctx.arc(x, y, radius, 0, Math.PI * 2)
+        this.ctx.stroke()
+        this.ctx.closePath()
     }
 
     drawStones () {
         // I'll get to you soon bitch
     }
 
-    render () {
-        this.drawBoard()
+    drawStore (x, y, radiusX, radiusY) {
+        this.ctx.beginPath()
+        this.ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2)
+        this.ctx.stroke()
+        this.ctx.closePath()
+    }
+
+    render (bData) {
+        this.drawBoard(bData)
     }
 }
 
 // Helper functions
-
-function getBoardSize (width, height) {
-    const wMargin = width/20
-    const hMargin = height * 0.23
-    
-    return {
-        x: wMargin,
-        y: hMargin,
-        width: width - (wMargin * 2),
-        height: height - (hMargin * 2),
-        radii: wMargin/2
-    }
-}

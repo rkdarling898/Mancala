@@ -1,12 +1,14 @@
+import { BoardData } from "./boarddata.js";
 import { Canvas } from "./canvas.js";
 import { MancalaRenderer } from "./mancalarenderer.js";
 
 const canvas = new Canvas(document.getElementById("game-canvas"))
-const mRend = new MancalaRenderer(canvas)
+const bData = new BoardData(canvas)
+const mRend = new MancalaRenderer(canvas.ctx)
 
 canvas.size = getCanvasSize()
 
-mRend.render()
+mRend.render(bData)
 
 function getCanvasSize () {
     if (innerWidth >= 1000) return {width: 1000, height: 500}
