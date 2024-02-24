@@ -9,7 +9,7 @@ export class MancalaRenderer {
     }
 
     drawBoard () {
-        const board = sizeBoard(this.canvas.width, this.canvas.height) // getBoardSize???
+        const board = getBoardSize(this.canvas.width, this.canvas.height)
 
         this.ctx.fillStyle = this.#backgroundColor
         this.ctx.strokeStyle = this.#lineColor
@@ -19,10 +19,15 @@ export class MancalaRenderer {
         this.ctx.stroke()
         this.ctx.fill()
         this.ctx.closePath()
-    }
 
-    drawPits () {
-        // SVG possibly???
+        // Draw pits and stores
+
+        for (let i = 0; i < 8; i++) {
+            this.ctx.beginPath()
+            this.ctx.arc(board.x + (33.75 * i) + (33.75 * (i + 1)) + (20 * i) + 20, board.y + 33.75 + 20, 33.75, 0, Math.PI * 2)
+            this.ctx.stroke()
+            this.ctx.closePath()
+        }
     }
 
     drawStones () {
@@ -36,9 +41,9 @@ export class MancalaRenderer {
 
 // Helper functions
 
-function sizeBoard (width, height) {
-    const wMargin = width/15
-    const hMargin = height/6
+function getBoardSize (width, height) {
+    const wMargin = width/20
+    const hMargin = height * 0.23
     
     return {
         x: wMargin,
