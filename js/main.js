@@ -6,10 +6,6 @@ const canvas = new Canvas(document.getElementById("game-canvas"))
 const bData = new BoardData(canvas)
 const mRend = new MancalaRenderer(canvas.ctx)
 
-canvas.size = getCanvasSize()
-
-mRend.render(bData)
-
 function getCanvasSize () {
     if (innerWidth >= 1000) return {width: 1000, height: 500}
 
@@ -18,3 +14,9 @@ function getCanvasSize () {
 
     return {width, height}
 }
+
+// Main code starts here
+
+canvas.size = getCanvasSize()
+
+mRend.render(bData)

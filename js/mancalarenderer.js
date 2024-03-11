@@ -32,20 +32,24 @@ export class MancalaRenderer {
                 continue
             }
 
-            this.drawPit(pit.x, pit.y, radius)
+            this.drawCircle(pit.x, pit.y, radius)
         }
 
     }
 
-    drawPit (x, y, radius) {
+    drawCircle (x, y, radius) {
         this.ctx.beginPath()
         this.ctx.arc(x, y, radius, 0, Math.PI * 2)
         this.ctx.stroke()
         this.ctx.closePath()
     }
 
-    drawStones () {
-        // I'll get to you soon bitch
+    drawStones (bData) {
+        const radius = bData.getPitRadius() / 4
+
+        bData.stones.forEach(stone => {
+            this.drawCircle(stone.x, stone.y, radius)
+        });
     }
 
     drawStore (x, y, radiusX, radiusY) {

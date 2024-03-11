@@ -1,4 +1,5 @@
 import { Pit } from "./pit.js"
+import { Stone } from "./stone.js"
 
 export class BoardData {
     constructor (canvas) {
@@ -19,6 +20,15 @@ export class BoardData {
             new Pit(13),
             new Pit(14, 'store'),
         ]
+        this.stones = () => {
+            const array = []
+            
+            for (let i = 0; i < 48; i++) {
+                array.push(new Stone(i))
+            }
+
+            return array
+        }
     }
 
     getBoardSpecs () {
@@ -49,6 +59,10 @@ export class BoardData {
 
         this.pits.forEach(pit => setPitLocation(pit, board, margin, radius))
     }
+}
+
+function getStonePosition (pit) {
+
 }
 
 function setPitLocation (pit, board, margin, radius) {

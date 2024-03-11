@@ -4,5 +4,6 @@ export class Pit {
         this.type = type
         this.x = undefined
         this.y = undefined
+        this.stones = new Map()
     }
 }
