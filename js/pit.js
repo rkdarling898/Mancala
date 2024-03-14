@@ -1,9 +1,9 @@
 export class Pit {
-    constructor (id, type = "pit") {
+    constructor (id, x, y, type = "pit") {
         this.id = id
         this.type = type
-        this.x = undefined
-        this.y = undefined
+        this.x = x
+        this.y = y
         this.stones = new Map()
     }
 }

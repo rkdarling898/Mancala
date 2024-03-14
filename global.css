@@ -8,6 +8,10 @@ body {
     background-color: gray;
 }
 
+canvas {
+    box-sizing: border-box;
+}
+
 .center-flex {
     display: flex;
     height: 100%;

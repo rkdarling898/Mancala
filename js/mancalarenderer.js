@@ -1,16 +1,16 @@
 export class MancalaRenderer {
     #backgroundColor = "white"
     #lineColor = "black"
+    #scale = 1
     
     constructor (ctx) {
         this.ctx = ctx
     }
 
     drawBoard (bData) {
-        const board = bData.getBoardSpecs()
-        const radius = bData.getPitRadius()
-        const margin = bData.getPitMargin()
-        let pit
+        const board = bData.getBoardSpecs(this.#scale)
+        const radius = 45 * this.#scale
+        const margin = 20 * this.#scale
 
         this.ctx.fillStyle = this.#backgroundColor
         this.ctx.strokeStyle = this.#lineColor
@@ -20,21 +20,8 @@ export class MancalaRenderer {
         this.ctx.stroke()
         this.ctx.fill()
         this.ctx.closePath()
-
-        // Draw pits and stores
-        bData.updatePitLocations()
         
-        for (let i = 0; i < 14; i++) {
-            pit = bData.pits[i]
-
-            if (pit.id % 7 === 0) {
-                this.drawStore(pit.x, pit.y, radius, board.height/2 - margin)
-                continue
-            }
-
-            this.drawCircle(pit.x, pit.y, radius)
-        }
-
+        this.drawPits(bData.pits, {height: board.height/2, radius, margin})
     }
 
     drawCircle (x, y, radius) {
@@ -44,11 +31,18 @@ export class MancalaRenderer {
         this.ctx.closePath()
     }
 
+    drawPits (pitArray, {height, radius, margin}) {
+        pitArray.forEach(pit => pit.type === 'store' ? 
+            this.drawStore(pit.x * this.#scale, pit.y * this.#scale, radius, height - margin) :
+            this.drawCircle(pit.x * this.#scale, pit.y * this.#scale, radius)
+        )
+    }
+
     drawStones (bData) {
-        const radius = bData.getPitRadius() / 4
+        const pitRadius = 45 * this.#scale
 
         bData.stones.forEach(stone => {
-            this.drawCircle(stone.x, stone.y, radius)
+            this.drawCircle(stone.x * this.#scale, stone.y * this.#scale, pitRadius/4)
         });
     }
 
@@ -61,6 +55,14 @@ export class MancalaRenderer {
 
     render (bData) {
         this.drawBoard(bData)
+    }
+
+    set scale (newScale) {
+        if (isNaN(newScale) || newScale == undefined || newScale < 0.5) {
+            console.error(`Invalid scale "${newScale}" was used. Please use a number greater than .5`)
+        }
+
+        this.#scale = newScale
     }
 }
 

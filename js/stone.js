@@ -3,8 +3,8 @@ export class Stone {
 
     constructor (id) {
         this.id = id
-        this.x = x
-        this.y = y
+        this.x = 0
+        this.y = 0
     }
 
     get velocity () {

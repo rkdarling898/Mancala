@@ -7,10 +7,17 @@ const bData = new BoardData(canvas)
 const mRend = new MancalaRenderer(canvas.ctx)
 
 function getCanvasSize () {
-    if (innerWidth >= 1000) return {width: 1000, height: 500}
+    if (innerWidth < 500) return {width: 500, height: 250}
+    
+    let width, height
 
-    const width = innerWidth > 350 ? innerWidth : 350
-    const height = width * 0.5
+    if ((innerWidth / 2) > innerHeight) {
+        height = innerHeight
+        width = height * 2
+    } else {
+        width = innerWidth
+        height = width / 2
+    }
 
     return {width, height}
 }
@@ -19,4 +26,8 @@ function getCanvasSize () {
 
 canvas.size = getCanvasSize()
 
+mRend.scale = canvas.width/1000
+
 mRend.render(bData)
+
+window.bData = bData

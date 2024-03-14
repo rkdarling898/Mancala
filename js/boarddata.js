@@ -5,77 +5,45 @@ export class BoardData {
     constructor (canvas) {
         this.canvas = canvas.element
         this.pits = [
-            new Pit(1),
-            new Pit(2),
-            new Pit(3),
-            new Pit(4),
-            new Pit(5),
-            new Pit(6),
-            new Pit(7, 'store'),
-            new Pit(8),
-            new Pit(9),
-            new Pit(10),
-            new Pit(11),
-            new Pit(12),
-            new Pit(13),
-            new Pit(14, 'store'),
+            new Pit(1, 775, 180),
+            new Pit(2, 665, 180),
+            new Pit(3, 555, 180),
+            new Pit(4, 445, 180),
+            new Pit(5, 335, 180),
+            new Pit(6, 225, 180),
+            new Pit(7, 115, 250, 'store'),
+            new Pit(8, 225, 320),
+            new Pit(9, 335, 320),
+            new Pit(10, 445, 320),
+            new Pit(11, 555, 320),
+            new Pit(12, 665, 320),
+            new Pit(13, 775, 320),
+            new Pit(14, 885, 250, 'store'),
         ]
-        this.stones = () => {
-            const array = []
-            
-            for (let i = 0; i < 48; i++) {
-                array.push(new Stone(i))
-            }
-
-            return array
-        }
+        this.stones = initStoneArray()
     }
 
-    getBoardSpecs () {
-        const wMargin = this.canvas.width/20
-        const hMargin = this.canvas.height * 0.23
-        
+    getBoardSpecs (scale = 1) {
         return {
-            x: wMargin,
-            y: hMargin,
-            width: this.canvas.width - (wMargin * 2),
-            height: this.canvas.height - (hMargin * 2),
-            radii: wMargin/3
+            x: 50 * scale,
+            y: 115 * scale,
+            width: 900 * scale,
+            height: 270 * scale,
+            radii: (50/3) * scale
         }
     }
+}
 
-    getPitRadius () {
-        return this.canvas.width * 0.045
+function initStoneArray () {
+    const array = []
+            
+    for (let i = 0; i < 48; i++) {
+        array.push(new Stone(i))
     }
 
-    getPitMargin () {
-        return this.canvas.width/50
-    }
-
-    updatePitLocations () {
-        const board = this.getBoardSpecs()
-        const margin = this.getPitMargin()
-        const radius = this.getPitRadius()
-
-        this.pits.forEach(pit => setPitLocation(pit, board, margin, radius))
-    }
+    return array
 }
 
 function getStonePosition (pit) {
 
-}
-
-function setPitLocation (pit, board, margin, radius) {
-    if (pit.id % 7 === 0) return setStoreLocation(pit, board, margin, radius)
-
-    const multiplier = pit.id < 7 ? (7 - pit.id) : (pit.id - 7)
-    const height = pit.id < 7 ? board.y + radius + margin : board.y + board.height - radius - margin
-
-    pit.x = board.x + (radius * multiplier) + (radius * (multiplier + 1)) + (margin * multiplier) + margin
-    pit.y = height
-}
-
-function setStoreLocation (pit, board, margin, radius) {
-    pit.x = pit.id === 7 ? board.x + margin + radius : board.x + board.width - radius - margin
-    pit.y = board.y + (board.height/2)
 }
