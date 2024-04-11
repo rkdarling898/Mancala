@@ -53,7 +53,7 @@ function randomOffset () {
         newOffset.x = (Math.random() * 60) - 30
         newOffset.y = (Math.random() * 60) - 30
 
-        offsetLength = Math.sqrt(Math.pow(newOffset.x, 2), Math.pow(newOffset.y, 2))
+        offsetLength = Math.sqrt(Math.pow(newOffset.x, 2) + Math.pow(newOffset.y, 2))
     } while (offsetLength > 30);
 
     return newOffset

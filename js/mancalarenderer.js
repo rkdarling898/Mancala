@@ -25,10 +25,13 @@ export class MancalaRenderer {
         this.drawPits(bData.pits, {height: board.height/2, radius, margin})
     }
 
-    drawCircle (x, y, radius) {
+    drawCircle (x, y, radius, fillBool = false) {
         this.ctx.beginPath()
         this.ctx.arc(x, y, radius, 0, Math.PI * 2)
         this.ctx.stroke()
+
+        if (fillBool) this.ctx.fill()
+
         this.ctx.closePath()
     }
 
@@ -46,7 +49,7 @@ export class MancalaRenderer {
         this.ctx.strokeStyle = this.#stoneColor
 
         bData.stones.forEach(stone => {
-            this.drawCircle(stone.x * this.#scale, stone.y * this.#scale, pitRadius/4)
+            this.drawCircle(stone.x * this.#scale, stone.y * this.#scale, pitRadius/4, true)
         });
     }
 
