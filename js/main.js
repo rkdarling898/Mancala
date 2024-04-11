@@ -6,8 +6,10 @@ const canvas = new Canvas(document.getElementById("game-canvas"))
 const bData = new BoardData(canvas)
 const mRend = new MancalaRenderer(canvas.ctx)
 
+let scale = 1
+
 function getCanvasSize () {
-    if (innerWidth < 500) return {width: 500, height: 250}
+    if (innerWidth < 500 || innerHeight < 250) return {width: 500, height: 250}
     
     let width, height
 
@@ -39,10 +41,13 @@ function init () {
             stone.y = pit.y + offset.y
 
             pit.stones.set(stone.id, stone)
-console.log(stone.id, offset)
+
             stoneCounter++
         }
     }
+
+    mRend.drawBoard(bData)
+    mRend.render(bData) 
 }
 
 function randomOffset () {
@@ -59,14 +64,31 @@ function randomOffset () {
     return newOffset
 }
 
+function sizeGame () {
+    canvas.size = getCanvasSize()
+    scale = (canvas.width / 1000) > 0.5 ? (canvas.width / 1000) : 0.5
+
+    mRend.scale = scale
+}
+
 // Main code starts here
 
-canvas.size = getCanvasSize()
-
-mRend.scale = canvas.width/1000
+sizeGame()
 
 init()
 
-mRend.render(bData)
+addEventListener('resize', e => {
+    sizeGame()
+
+    mRend.clearCanvas(canvas)
+    mRend.drawBoard(bData)
+    mRend.render(bData)
+})
+
+canvas.element.addEventListener('click', e => {
+    // Add ability to discern whether pit was clicked or not
+
+    // Animation handling
+})
 
 window.bData = bData

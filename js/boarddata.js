@@ -43,7 +43,3 @@ function initStoneArray () {
 
     return array
 }
-
-function getStonePosition (pit) {
-
-}

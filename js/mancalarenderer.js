@@ -3,9 +3,14 @@ export class MancalaRenderer {
     #lineColor = "black"
     #scale = 1
     #stoneColor = "red"
+    #stoneLineColor = "#770000"
     
     constructor (ctx) {
         this.ctx = ctx
+    }
+
+    clearCanvas (canvas) {
+        this.ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
 
     drawBoard (bData) {
@@ -46,7 +51,7 @@ export class MancalaRenderer {
         const pitRadius = 45 * this.#scale
 
         this.ctx.fillStyle = this.#stoneColor
-        this.ctx.strokeStyle = this.#stoneColor
+        this.ctx.strokeStyle = this.#stoneLineColor
 
         bData.stones.forEach(stone => {
             this.drawCircle(stone.x * this.#scale, stone.y * this.#scale, pitRadius/4, true)
@@ -61,7 +66,6 @@ export class MancalaRenderer {
     }
 
     render (bData) {
-        this.drawBoard(bData)
         this.drawStones(bData)
     }
 
