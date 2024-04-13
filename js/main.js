@@ -8,6 +8,14 @@ const mRend = new MancalaRenderer(canvas.ctx)
 
 let scale = 1
 
+function canvasToClientPostition (canvasCoordinate) {
+    // Takes a cooridinate based off of the canvas postion and returns client coordinates
+
+    const canvasRect = canvas.element.getBoundingClientRect()
+
+    return {x: canvasRect.x + (canvasCoordinate.x * scale), y: canvasRect.y + (canvasCoordinate.y * scale)}
+}
+
 function getCanvasSize () {
     if (innerWidth < 500 || innerHeight < 250) return {width: 500, height: 250}
     
@@ -22,6 +30,26 @@ function getCanvasSize () {
     }
 
     return {width, height}
+}
+
+function getClickedPit (x, y) {
+    const pitRadius = 45 * scale
+    let pit, pitPos
+    let relativePos = {x: 0, y: 0}
+
+    for (let i = 0; i < bData.pits.length; i++) {
+        pit = bData.pits[i]
+        pitPos = canvasToClientPostition({x: pit.x, y: pit.y})
+
+        relativePos.x = pitPos.x - x
+        relativePos.y = pitPos.y - y
+
+        if ( Math.sqrt(Math.pow(relativePos.x, 2) + Math.pow(relativePos.y, 2)) <= pitRadius ) {
+            return pit.type === 'store' ? null : pit
+        }
+    }
+
+    return null
 }
 
 function init () {
@@ -86,7 +114,7 @@ addEventListener('resize', e => {
 })
 
 canvas.element.addEventListener('click', e => {
-    // Add ability to discern whether pit was clicked or not
+    const pit = getClickedPit(e.x, e.y)
 
     // Animation handling
 })
