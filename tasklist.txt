@@ -1,0 +1,2 @@
+Refactor scale property out of mancala renderer
+
