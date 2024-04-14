@@ -1,6 +1,11 @@
 export class AnimationHandler {
     #idGen = idGenerator()
     #eventQueue = new Map()
+    #lastRenderTime
+
+    constructor () {
+
+    }
 
     addEvent (eventObj) {
         // Code to validate event obj here
@@ -14,8 +19,26 @@ export class AnimationHandler {
         if (!eventDequeued) console.error(`Event ID #${eventId} was not found.`)
     }
 
-    runEvents () {
-        
+    async runEvent (renderFunc, params) {
+
+    }
+
+    runEvents (renderFunc, params = []) {
+        if (typeof(renderFunc) !== 'function') {
+            console.log('Render function paramater was not of type function. Please pass function here.')
+            return
+        }
+
+        if (this.queueLength === 0) {
+            console.log('No events to run in queue')
+            return
+        }
+
+        // Figure out how to use Promise.allSettled in order to run all animations together
+    }
+
+    get queueLength () {
+        return this.#eventQueue.size
     }
 }
 

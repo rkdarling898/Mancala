@@ -1,3 +1,4 @@
+import { AnimationHandler } from "./animationhandler.js";
 import { BoardData } from "./boarddata.js";
 import { Canvas } from "./canvas.js";
 import { MancalaRenderer } from "./mancalarenderer.js";
@@ -5,6 +6,7 @@ import { MancalaRenderer } from "./mancalarenderer.js";
 const canvas = new Canvas(document.getElementById("game-canvas"))
 const bData = new BoardData(canvas)
 const mRend = new MancalaRenderer(canvas.ctx)
+const aHand = new AnimationHandler()
 
 let scale = 1
 
@@ -114,9 +116,14 @@ addEventListener('resize', e => {
 })
 
 canvas.element.addEventListener('click', e => {
+    if (aHand.queueLength != 0) return
+    
     const pit = getClickedPit(e.x, e.y)
 
     // Animation handling
+
+    
 })
 
 window.bData = bData
+window.aHand = aHand
