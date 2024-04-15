@@ -115,7 +115,7 @@ addEventListener('resize', e => {
     mRend.render(bData)
 })
 
-canvas.element.addEventListener('click', e => {
+canvas.element.addEventListener('click', async e => {
     if (aHand.queueLength != 0) return
     
     const pit = getClickedPit(e.x, e.y)

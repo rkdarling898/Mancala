@@ -1,29 +1,23 @@
 export class AnimationHandler {
-    #idGen = idGenerator()
-    #eventQueue = new Map()
+    #eventQueue = []
     #lastRenderTime
 
     constructor () {
-
+        this.runEventLoop = true
+        this.eventLoop = eventLoop.bind(this)
     }
 
     addEvent (eventObj) {
         // Code to validate event obj here
 
-        this.#eventQueue.set(this.#idGen.next().value, eventObj)
+        this.#eventQueue.push(eventObj)
     }
 
-    finishEvent (eventId) {
-        const eventDequeued = this.#eventQueue.delete(eventId)
-
-        if (!eventDequeued) console.error(`Event ID #${eventId} was not found.`)
-    }
-
-    async runEvent (renderFunc, params) {
+    async runEvent (event, renderFunc, params) {
 
     }
 
-    runEvents (renderFunc, params = []) {
+    async runEvents (renderFunc, params = []) {
         if (typeof(renderFunc) !== 'function') {
             console.log('Render function paramater was not of type function. Please pass function here.')
             return
@@ -35,15 +29,24 @@ export class AnimationHandler {
         }
 
         // Figure out how to use Promise.allSettled in order to run all animations together
+
+        this.eventLoop()
+
+        await Promise.allSettled(this.#eventQueue.map(event => this.runEvent(event, renderFunc, params)))
+
+        this.runEventLoop = false
     }
 
     get queueLength () {
-        return this.#eventQueue.size
+        return this.#eventQueue.length
     }
 }
 
-function* idGenerator () {
-    let i = 0
-
-    while (true) yield i++
+async function eventLoop () {
+    if (this.runEventLoop) {
+        requestAnimationFrame(this.eventLoop)
+    } else {
+        console.log('stopped')
+        this.runEventLoop = true
+    }
 }
