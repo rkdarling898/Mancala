@@ -66,6 +66,7 @@ export class MancalaRenderer {
     }
 
     render (bData) {
+        this.drawBoard(bData)
         this.drawStones(bData)
     }
 

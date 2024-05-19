@@ -1,4 +1,4 @@
-import { AnimationHandler } from "./animationhandler.js";
+import { AnimationHandler } from "./animationhand.js";
 import { BoardData } from "./boarddata.js";
 import { Canvas } from "./canvas.js";
 import { MancalaRenderer } from "./mancalarenderer.js";
@@ -8,7 +8,9 @@ const bData = new BoardData(canvas)
 const mRend = new MancalaRenderer(canvas.ctx)
 const aHand = new AnimationHandler()
 
+const refreshDelay = 1000/60
 let scale = 1
+let lastRenderTime = undefined
 
 function canvasToClientPostition (canvasCoordinate) {
     // Takes a cooridinate based off of the canvas postion and returns client coordinates
@@ -16,6 +18,15 @@ function canvasToClientPostition (canvasCoordinate) {
     const canvasRect = canvas.element.getBoundingClientRect()
 
     return {x: canvasRect.x + (canvasCoordinate.x * scale), y: canvasRect.y + (canvasCoordinate.y * scale)}
+}
+
+function gameLoop () {
+    const dt = getDeltaTime()
+
+    mRend.clearCanvas()
+    mRend.render()
+
+    setTimeout(() => requestAnimationFrame(gameLoop), refreshDelay)
 }
 
 function getCanvasSize () {
@@ -54,6 +65,20 @@ function getClickedPit (x, y) {
     return null
 }
 
+function getDeltaTime () {
+    if (lastRenderTime = undefined) {
+        lastRenderTime = new Date().getTime()
+        return 0
+    }
+
+    const currentTime = new Date().getTime()
+    const delta = currentTime - lastRenderTime
+
+    lastRenderTime = currentTime
+
+    return delta
+}
+
 function init () {
     let pit, stone, offset
     let stoneCounter = 0
@@ -76,7 +101,6 @@ function init () {
         }
     }
 
-    mRend.drawBoard(bData)
     mRend.render(bData) 
 }
 
@@ -116,13 +140,12 @@ addEventListener('resize', e => {
 })
 
 canvas.element.addEventListener('click', async e => {
-    if (aHand.queueLength != 0) return
-    
     const pit = getClickedPit(e.x, e.y)
 
     // Animation handling
 
-    
+    pit.stones.forEach(stone => aHand.addEvent(stone, [{endPoint: {x: 100, y: 100}, moveTime: 1000}]))
+    console.log(aHand.eventObjects)
 })
 
 window.bData = bData
