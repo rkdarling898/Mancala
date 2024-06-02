@@ -6,6 +6,8 @@ import { renderBoard } from "./mancalaRender.js"
 
 const canvas = document.getElementById('game-canvas')
 const ctx = canvas.getContext('2d')
+
+const board = new Board()
 const gameLoop = mainLoop()
 
 let scale
@@ -20,11 +22,12 @@ addEventListener('resize', size)
 
 gameLoop()
 
+window.board = board
+
 // Functions
 
 function mainLoop () {
     // Variables
-    const board = new Board()
 
     function loop () {
         renderBoard(ctx, board, scale)
@@ -36,4 +39,6 @@ function mainLoop () {
 function size () {
     scale = getScale(canvas)
     scaleCanvas(canvas, scale)
+
+    renderBoard(ctx, board, scale)
 }
