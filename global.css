@@ -1,0 +1,27 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    height: 100vh;
+    background-color: gray;
+}
+
+canvas {
+    background-color: #FCF1E7;
+    box-sizing: border-box;
+    /* box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75); */
+}
+
+.center-flex {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas.rotated {
+    transform: rotate(90deg);
+    /* box-shadow: 3px -3px 3px 0px rgba(0,0,0,0.75); */
+}
