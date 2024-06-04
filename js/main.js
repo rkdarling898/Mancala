@@ -1,5 +1,6 @@
 import { Board } from "./board.js"
 import { getScale, scaleCanvas } from "./canvasScaling.js"
+import { gameClickHandler } from "./clickEvent.js"
 import { renderBoard } from "./mancalaRender.js"
 
 // Global variables
@@ -11,12 +12,14 @@ const board = new Board()
 const gameLoop = mainLoop()
 
 let scale
+const clickHandler = gameClickHandler(board, canvas)
 
 size()
 
 // Event Listeners
 
 addEventListener('resize', size)
+canvas.addEventListener('click', clickHandler)
 
 // Main code
 

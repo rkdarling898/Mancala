@@ -1,4 +1,5 @@
 import { drawCircle, drawEllipse, drawRoundRect } from "./canvasRender.js"
+import { getScaledPosition } from "./utils.js"
 
 export function renderBoard (ctx, board, scale) {
     const bDims = board.getMeasurements(scale)
@@ -33,8 +34,4 @@ function renderStonesInPit (ctx, radius, pit, scale) {
 
         drawCircle(ctx, x + (offset.x * scale), y + (offset.y * scale), radius, true)
     })
-}
-
-function getScaledPosition (coordinates, scale) {
-    return {x: coordinates.x * scale, y: coordinates.y * scale}
 }
