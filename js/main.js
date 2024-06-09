@@ -9,7 +9,6 @@ const canvas = document.getElementById('game-canvas')
 const ctx = canvas.getContext('2d')
 
 const board = new Board()
-const gameLoop = mainLoop()
 
 let scale
 const clickHandler = gameClickHandler(board, canvas)
@@ -23,25 +22,23 @@ canvas.addEventListener('click', clickHandler)
 
 // Main code
 
-gameLoop()
+mainLoop()
 
 window.board = board
 
 // Functions
 
 function mainLoop () {
-    // Variables
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    function loop () {
-        renderBoard(ctx, board, scale)
-    }
+    // Update function
+    
+    renderBoard(ctx, board, scale)
 
-    return loop
+    requestAnimationFrame(mainLoop)
 }
 
 function size () {
     scale = getScale(canvas)
     scaleCanvas(canvas, scale)
-
-    renderBoard(ctx, board, scale)
 }

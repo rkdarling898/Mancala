@@ -1,4 +1,5 @@
 import { getScale } from "./canvasScaling.js"
+import { avalancheLogic } from "./gameEvents.js"
 import { getBoundClickHandler, getScaledPosition } from "./utils.js"
 
 export function gameClickHandler (board, canvas) {
@@ -9,7 +10,11 @@ export function gameClickHandler (board, canvas) {
         const clickPosition = {x: e.offsetX, y: e.offsetY}
         const radius = board.getMeasurements(scale).pitRadius
 
-        console.log(clickedPit(scale, radius, board.pits, clickPosition))
+        const pit = clickedPit(scale, radius, board.pits, clickPosition)
+
+        if (pit !== null) {
+            avalancheLogic(pit, board)
+        }
     }
 
     return getBoundClickHandler(handler, board)

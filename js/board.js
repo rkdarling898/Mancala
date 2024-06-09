@@ -37,6 +37,12 @@ export class Board {
         return {x: pit.x * scale, y: pit.y * scale}
     }
 
+    nextPit (currentPitId) {
+        if (currentPitId === 14) return this.pits[0]
+
+        return this.pits[currentPitId] // Since pit id is one above index, the next pit's index equals id
+    }
+
     setBoard () {
         const pits = [
             new Pit(250, 72, 1),
