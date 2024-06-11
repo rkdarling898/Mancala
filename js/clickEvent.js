@@ -4,6 +4,10 @@ import { getBoundClickHandler, getScaledPosition } from "./utils.js"
 
 export function gameClickHandler (board, canvas) {
     const canvasEl = canvas
+    const gameState = {
+        isPlayer1Turn: true,
+        gamePlayPaused: false
+    }
 
     function handler (board, e) {
         const scale = getScale(canvasEl)
@@ -13,7 +17,7 @@ export function gameClickHandler (board, canvas) {
         const pit = clickedPit(scale, radius, board.pits, clickPosition)
 
         if (pit !== null) {
-            avalancheLogic(pit, board)
+            avalancheLogic(pit, board, gameState)
         }
     }
 
