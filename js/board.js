@@ -37,10 +37,26 @@ export class Board {
         return {x: pit.x * scale, y: pit.y * scale}
     }
 
+    haveStonesInPits (pits) {
+        for (let i = 0; i < pits.length; i++) {
+            if (pits[i].stones.length !== 0) return true
+        }
+
+        return false
+    }
+
     nextPit (currentPitId) {
         if (currentPitId === 14) return this.pits[0]
 
         return this.pits[currentPitId] // Since pit id is one above index, the next pit's index equals id
+    }
+
+    p1PitsEmpty () {
+        return !this.haveStonesInPits(this.pits.filter(pit => pit.id < 7))
+    }
+
+    p2PitsEmpty () {
+        return !this.haveStonesInPits(this.pits.filter(pit => pit.id > 7 && pit.id < 14)) 
     }
 
     setBoard () {

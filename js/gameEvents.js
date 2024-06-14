@@ -9,10 +9,23 @@ export function avalancheLogic (pit, board, state) {
     const storeIdToSkip = state.isPlayer1Turn ? 14 : 7
     
     spreadStonesLoop(pit, board, state, storeIdToSkip)
+
+    if (gameIsOver(board)) {
+        state.gamePlayPaused = true
+        console.log("It's all over folks")
+    }
 }
 
 function isCurrentPlayerPit (pitId, isPlayer1Turn) {
     return isPlayer1Turn ? (pitId <= 7) : (pitId > 7)
+}
+
+function gameIsOver (board) {
+    if (board.p1PitsEmpty()) return true
+// Also move all remaining stones to correct player
+    if (board.p2PitsEmpty()) return true
+
+    return false
 }
 
 function getLastPitInPath (pit, board, storeIdToSkip) {
@@ -62,21 +75,24 @@ function spreadStonesLoop (pit, board, state, storeIdToSkip) {
 
     let continueLooping = true
     let currentPit = pit
-    let lastPitInPath
+    let lastPitInPath = getLastPitInPath(pit, board, storeIdToSkip)
 
     while (continueLooping) {
-        lastPitInPath = getLastPitInPath(pit, board, storeIdToSkip)
-
         if (lastPitInPath.stones.length === 0 || lastPitInPath.id === playerStoreId) continueLooping = false
 
         spreadStonesInPit(currentPit, board, storeIdToSkip)
         
-        if (continueLooping === true) currentPit = lastPitInPath
+        if (continueLooping) {
+            currentPit = lastPitInPath
+            lastPitInPath = getLastPitInPath(currentPit, board, storeIdToSkip)
+        }
     }
 
     if (lastPitInPath.type === 'pit') {
         state.isPlayer1Turn = state.isPlayer1Turn ? false : true
     }
+
+    console.log(lastPitInPath)
 }
 
 // Shannon is the most beautiful person in the world
