@@ -12,7 +12,7 @@ export function avalancheLogic (pit, board, state) {
 
     if (gameIsOver(board)) {
         state.gamePlayPaused = true
-        console.log("It's all over folks")
+        alert("It's all over folks")
     }
 }
 

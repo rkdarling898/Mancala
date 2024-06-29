@@ -5,3 +5,7 @@ export function getScaledPosition (coordinates, scale) {
 export function getBoundClickHandler (handlerFn, ...handlerArgs) {
     return handlerFn.bind(null, ...handlerArgs)
 }
+
+export function isFunction(fn) {
+    return Object.prototype.toString.call(fn) == '[object Function]';
+  }

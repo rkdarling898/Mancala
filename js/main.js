@@ -13,14 +13,13 @@ const board = new Board()
 let scale
 const clickHandler = gameClickHandler(board, canvas)
 
-size()
-
 // Event Listeners
 
 addEventListener('resize', size)
 canvas.addEventListener('click', clickHandler)
 
 // Main code
+size()
 
 mainLoop()
 
