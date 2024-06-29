@@ -1,4 +1,6 @@
-export function avalancheLogic (pit, board, state) {
+import { AsyncEventQueue } from "./asyncEventQueue.js"
+
+export async function avalancheLogic (pit, board, state) {
     if (
         state.gamePlayPaused ||
         pit.type === 'store' ||
@@ -8,12 +10,50 @@ export function avalancheLogic (pit, board, state) {
 
     const storeIdToSkip = state.isPlayer1Turn ? 14 : 7
     
-    spreadStonesLoop(pit, board, state, storeIdToSkip)
+    state.gamePlayPaused = true
+
+    await spreadStonesLoop(pit, board, state, storeIdToSkip)
 
     if (gameIsOver(board)) {
-        state.gamePlayPaused = true
         alert("It's all over folks")
+        return
     }
+
+    state.gamePlayPaused = false
+}
+
+function createStoneMoveEvent (stone, currentPit, nextPit, moveTime) {
+    async function stoneEvent () {
+        await new Promise(resolve => {
+            const deltaX = nextPit.x - currentPit.x
+            const deltaY = nextPit.y - currentPit.y
+
+            stone.velocity = {
+                x: deltaX / moveTime,
+                y: deltaY / moveTime
+            }
+            
+            setTimeout(() => {
+                resolve()
+            }, moveTime)
+        })
+
+        stone.velocity = {x: 0, y: 0}
+        stone.x = nextPit.x
+        stone.y = nextPit.y
+    }
+
+    return stoneEvent
+}
+
+function createStoneEventQueue (stone, pit, pitsInPath) {
+    const eventQueue = new AsyncEventQueue()
+
+    for (let i = 0; i < pitsInPath.length; i++) {
+        eventQueue.enqueue(createStoneMoveEvent(stone, pit, pitsInPath[i], 2000))
+    }
+
+    return eventQueue
 }
 
 function isCurrentPlayerPit (pitId, isPlayer1Turn) {
@@ -21,9 +61,8 @@ function isCurrentPlayerPit (pitId, isPlayer1Turn) {
 }
 
 function gameIsOver (board) {
-    if (board.p1PitsEmpty()) return true
+    if (board.p1PitsEmpty() || board.p2PitsEmpty()) return true
 // Also move all remaining stones to correct player
-    if (board.p2PitsEmpty()) return true
 
     return false
 }
@@ -42,35 +81,57 @@ function getLastPitInPath (pit, board, storeIdToSkip) {
     return currentPit
 }
 
-function moveStone (currentPit, nextPit) {
-    const stone = currentPit.stones.pop()
+function getPitsInSpreadPath (currentPit, board, storeIdToSkip) {
+    const pitsInPath = []
+    let idToPass = currentPit.id
+    let nextPit
 
-    if (stone !== undefined) {
-        const nextPitPosition = nextPit.position
+    for (let i = 0; i < currentPit.stones.length; i++) {
+        nextPit = board.nextPit(idToPass)
 
-        stone.x = nextPitPosition.x
-        stone.y = nextPitPosition.y
+        if (nextPit.id === storeIdToSkip) nextPit = board.nextPit(nextPit.id)
 
-        nextPit.stones.push(stone)
+        pitsInPath.push(nextPit)
+
+        idToPass = nextPit.id
     }
+
+    return pitsInPath
 }
 
-function spreadStonesInPit (pit, board, storeIdToSkip) {
+// function moveStone (currentPit, nextPit) {
+//     const stone = currentPit.stones.pop()
+
+//     if (stone !== undefined) {
+//         const nextPitPosition = nextPit.position
+
+//         stone.x = nextPitPosition.x
+//         stone.y = nextPitPosition.y
+
+//         nextPit.stones.push(stone)
+//     }
+// }
+
+async function spreadStonesIntoPits (pit, board, storeIdToSkip) {
     const stoneCount = pit.stones.length
-    let idToPass = pit.id
+    const pitsInPath = getPitsInSpreadPath(pit, board, storeIdToSkip)
+    const stoneEventQueues = []
 
     for (let i = 0; i < stoneCount; i++) {
-        let recievingPit = board.nextPit(idToPass)
+        const stone = pit.stones.pop()
+        const lastPit = pitsInPath[pitsInPath.length - 1]
+        
+        stoneEventQueues.push(createStoneEventQueue(stone, pit, pitsInPath))
 
-        if (recievingPit.id === storeIdToSkip) recievingPit = board.nextPit(recievingPit.id)
+        lastPit.stones.push(stone)
 
-        moveStone(pit, recievingPit)
-
-        idToPass = recievingPit.id
+        pitsInPath.pop()
     }
+
+    await Promise.race(stoneEventQueues.map(queue => queue.runAllEvents()))
 }
 
-function spreadStonesLoop (pit, board, state, storeIdToSkip) {
+async function spreadStonesLoop (pit, board, state, storeIdToSkip) {
     const playerStoreId = storeIdToSkip === 14 ? 7 : 14
 
     let continueLooping = true
@@ -80,7 +141,7 @@ function spreadStonesLoop (pit, board, state, storeIdToSkip) {
     while (continueLooping) {
         if (lastPitInPath.stones.length === 0 || lastPitInPath.id === playerStoreId) continueLooping = false
 
-        spreadStonesInPit(currentPit, board, storeIdToSkip)
+        await spreadStonesIntoPits(currentPit, board, storeIdToSkip)
         
         if (continueLooping) {
             currentPit = lastPitInPath
@@ -91,8 +152,6 @@ function spreadStonesLoop (pit, board, state, storeIdToSkip) {
     if (lastPitInPath.type === 'pit') {
         state.isPlayer1Turn = state.isPlayer1Turn ? false : true
     }
-
-    console.log(lastPitInPath)
 }
 
 // Shannon is the most beautiful person in the world

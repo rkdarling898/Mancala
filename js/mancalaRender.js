@@ -8,6 +8,7 @@ export function renderBoard (ctx, board, scale) {
     ctx.fillStyle = 'red'
 
     drawRoundRect(ctx, bDims.x, bDims.y, bDims.width, bDims.height, [3 * scale])
+
     renderPits(ctx, bDims.pitRadius, board.pits, scale)
     renderStones(ctx, 4 * scale, board.pits, scale)
 }
@@ -27,11 +28,19 @@ function renderStones (ctx, radius, pitArray, scale) {
 }
 
 function renderStonesInPit (ctx, radius, pit, scale) {
-    const {x, y} = getScaledPosition(pit.position, scale)
-
     pit.stones.forEach(stone => {
+        const {x, y} = getScaledPosition(stone.position, scale)
         let offset = stone.offset
 
         drawCircle(ctx, x + (offset.x * scale), y + (offset.y * scale), radius, true)
+    })
+}
+
+export function update (board, delta, scale) {
+    board.pits.forEach(pit => {
+        pit.stones.forEach(stone => {
+            stone.x += stone.velocity.x * delta * scale
+            stone.y += stone.velocity.y * delta * scale
+        })
     })
 }

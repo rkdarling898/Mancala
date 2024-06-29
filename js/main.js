@@ -1,7 +1,8 @@
 import { Board } from "./board.js"
 import { getScale, scaleCanvas } from "./canvasScaling.js"
 import { gameClickHandler } from "./clickEvent.js"
-import { renderBoard } from "./mancalaRender.js"
+import { renderBoard, update } from "./mancalaRender.js"
+import { deltaClosure } from "./utils.js"
 
 // Global variables
 
@@ -11,7 +12,9 @@ const ctx = canvas.getContext('2d')
 const board = new Board()
 
 let scale
+
 const clickHandler = gameClickHandler(board, canvas)
+const getDelta = deltaClosure()
 
 // Event Listeners
 
@@ -32,6 +35,7 @@ function mainLoop () {
 
     // Update function
     
+    update(board, getDelta(), scale)
     renderBoard(ctx, board, scale)
 
     requestAnimationFrame(mainLoop)
