@@ -36,11 +36,11 @@ function renderStonesInPit (ctx, radius, pit, scale) {
     })
 }
 
-export function update (board, delta, scale) {
+export function update (board, delta) {
     board.pits.forEach(pit => {
         pit.stones.forEach(stone => {
-            stone.x += stone.velocity.x * delta * scale
-            stone.y += stone.velocity.y * delta * scale
+            stone.x += stone.velocity.x * delta
+            stone.y += stone.velocity.y * delta
         })
     })
 }

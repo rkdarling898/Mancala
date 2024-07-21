@@ -16,10 +16,13 @@ let scale
 const clickHandler = gameClickHandler(board, canvas)
 const getDelta = deltaClosure()
 
+const s22 = board.pits[2].stones[3]
 // Event Listeners
 
 addEventListener('resize', size)
 canvas.addEventListener('click', clickHandler)
+
+addEventListener("keydown", () => console.log(s22))
 
 // Main code
 size()
@@ -35,7 +38,7 @@ function mainLoop () {
 
     // Update function
     
-    update(board, getDelta(), scale)
+    update(board, getDelta())
     renderBoard(ctx, board, scale)
 
     requestAnimationFrame(mainLoop)
